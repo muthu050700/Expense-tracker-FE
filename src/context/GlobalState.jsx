@@ -19,7 +19,7 @@ export const GlobalProvider = ({ children }) => {
 
     const getTransaction = async () => {
         try {
-            const res = await fetch("http://localhost:7777/getAllExpense");
+            const res = await fetch("https://expense-tracker-be-zhqy.onrender.com/getAllExpense");
             const data = await res.json();
 
             if (res.ok) {
@@ -44,7 +44,7 @@ export const GlobalProvider = ({ children }) => {
     // Actions
     async function deleteTransaction(id) {
         try {
-            const res = await fetch(`http://localhost:7777/deleteExpense/${id}`, {
+            const res = await fetch(`https://expense-tracker-be-zhqy.onrender.com/deleteExpense/${id}`, {
                 method: 'DELETE'
             });
             const data = await res.json();
@@ -66,7 +66,7 @@ export const GlobalProvider = ({ children }) => {
 
     async function addTransaction(transaction) {
         try {
-            const res = await fetch("http://localhost:7777/user/expense", {
+            const res = await fetch("https://expense-tracker-be-zhqy.onrender.com/user/expense", {
                 method: "POST",
                 headers: { "Content-type": "application/json" },
                 body: JSON.stringify(transaction)
@@ -110,7 +110,7 @@ export const GlobalProvider = ({ children }) => {
 
     async function editTransaction(id, transaction) {
         try {
-            const res = await fetch(`http://localhost:7777/updateExpense/${id}`, {
+            const res = await fetch(`https://expense-tracker-be-zhqy.onrender.com/updateExpense/${id}`, {
                 method: "PUT",
                 headers: { "Content-type": "application/json" },
                 body: JSON.stringify(transaction)
