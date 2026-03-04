@@ -11,9 +11,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -22,12 +24,34 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .date-picker {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #f9f9f9;
+    color: #333;
+    transition: border-color 0.2s;
+  }
+
+  .date-picker:focus {
+    border-color: #007bff;
+    outline: none;
+    background: #fff;
+  }
+
+  .date-picker::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+    cursor: pointer;
+  }
+
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
@@ -39,4 +63,20 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* Style for no transactions message */
+.no-transactions-message {
+  margin: 2rem auto;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(90deg, #f8fafc 0%, #e3e7ed 100%);
+  color: #555;
+  border-radius: 8px;
+  font-size: 1.15rem;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  max-width: 400px;
+  text-align: center;
+  letter-spacing: 0.5px;
+  border: 1px solid #e0e0e0;
 }

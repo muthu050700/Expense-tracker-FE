@@ -5,7 +5,8 @@ import { toast } from 'react-hot-toast';
 // Initial state
 const initialState = {
     transactions: [],
-    transactionToEdit: null
+    transactionToEdit: null,
+    selectedDate: new Date()
 }
 
 
@@ -17,9 +18,15 @@ export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({ children }) => {
     const [state, dispatch] = useReducer(AppReducer, initialState);
 
-    const getTransaction = async () => {
+    const getTransaction = async (date) => {
         try {
-            const res = await fetch("https://expense-tracker-be-zhqy.onrender.com/getAllExpense");
+            const dateToFetch = date || state.selectedDate;
+            const month = dateToFetch.getMonth() + 1;
+            const year = dateToFetch.getFullYear();
+
+            // Assuming the backend expects month and year or a formatted date string
+            // Based on user request "current month date will be passed", I'll format it
+            const res = await fetch(`https://expense-tracker-be-zhqy.onrender.com/getAllExpense?month=${month}&year=${year}`);
             const data = await res.json();
 
             if (res.ok) {
@@ -39,9 +46,16 @@ export const GlobalProvider = ({ children }) => {
 
     useEffect(() => {
         getTransaction()
-    }, [])
+    }, [state.selectedDate])
 
     // Actions
+    function updateFilterDate(date) {
+        dispatch({
+            type: 'UPDATE_FILTER_DATE',
+            payload: date
+        });
+    }
+
     async function deleteTransaction(id) {
         try {
             const res = await fetch(`https://expense-tracker-be-zhqy.onrender.com/deleteExpense/${id}`, {
@@ -74,17 +88,8 @@ export const GlobalProvider = ({ children }) => {
             const data = await res.json();
 
             if (res.ok) {
-                if (data.data) {
-                    dispatch({
-                        type: "SET_TRANSACTIONS",
-                        payload: data.data
-                    });
-                } else {
-                    dispatch({
-                        type: 'ADD_TRANSACTION',
-                        payload: data
-                    });
-                }
+                // After adding, we might want to re-fetch for the current selected month
+                getTransaction();
                 toast.success(data.message || "Transaction added successfully");
             } else {
                 toast.error(data.message || "Failed to add transaction");
@@ -118,17 +123,8 @@ export const GlobalProvider = ({ children }) => {
             const data = await res.json();
 
             if (res.ok) {
-                if (data.data && Array.isArray(data.data)) {
-                    dispatch({
-                        type: "SET_TRANSACTIONS",
-                        payload: data.data
-                    });
-                } else {
-                    dispatch({
-                        type: 'UPDATE_TRANSACTION',
-                        payload: data.data || data
-                    });
-                }
+                // After editing, re-fetch for the current selected month
+                getTransaction();
                 toast.success(data.message || "Transaction updated successfully");
             } else {
                 toast.error(data.message || "Failed to edit transaction");
@@ -142,11 +138,13 @@ export const GlobalProvider = ({ children }) => {
     return (<GlobalContext.Provider value={{
         transactions: state.transactions,
         transactionToEdit: state.transactionToEdit,
+        selectedDate: state.selectedDate,
         deleteTransaction,
         addTransaction,
         findTransaction,
         clearEdit,
-        editTransaction
+        editTransaction,
+        updateFilterDate
     }}>
         {children}
     </GlobalContext.Provider>);

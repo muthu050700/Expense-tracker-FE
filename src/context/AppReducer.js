@@ -33,6 +33,11 @@ export default (state, action) => {
                 ...state,
                 transactionToEdit: null
             }
+        case 'UPDATE_FILTER_DATE':
+            return {
+                ...state,
+                selectedDate: action.payload
+            }
         default:
             return state;
     }
